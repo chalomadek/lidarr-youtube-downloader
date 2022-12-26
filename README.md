@@ -4,18 +4,36 @@ Look for missing tracks in your lidarr library and download them from youtube.
 
 # Docker Usage
 
-### docker run
+### build and run locally
 ```
-docker build -t lys .
-# you need to be careful that the path matches the path that lidarr knows
+docker build -t yls .
+# you need to be careful that the path matches the path that lidarr knows (use the same external:internal references)
 docker run \
    -v /path/to/music:/path/to/music \
    -v /path/to/db/file:/path/to/db/file \   
-   -e LIDARR_URL="http://HOST_IP:8686" \
-   -e LIDARR_API_KEY="771de60596e946f6b3e5e6f5fb6fd729" \
+   -e LIDARR_URL="http://YOUR-HOST-IP:8686" \
+   -e LIDARR_API_KEY="YOUR-LIDARR-API-KEY" \
    -e LIDARR_DB="/path/to/lidarr/lidarr.db" \
    -e LIDARR_MUSIC_PATH="/music" \
-   --name lys lys 
+   --name yls yls
+```
+
+### via docker-compose (only for arm64 for now)
+```
+version: "3"
+services:
+lidarr-youtube:
+    image: chalomadek/yls
+    container_name: lidarr-youtube
+    environment:
+      - LIDARR_URL=http://YOUR-HOST-IP:8686
+      - LIDARR_API_KEY=YOUR-LIDARR-API-KEY
+      - LIDARR_DB=/path/to/lidarr/lidarr.db
+      - LIDARR_MUSIC_PATH=/music
+    volumes:
+      - /path/to/music:/path/to/music
+      - /path/to/db/file:/path/to/db/file
+    restart: unless-stopped
 ```
 
 # Local Usage
